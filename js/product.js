@@ -20,7 +20,7 @@ const PRODUCTS_DATA = {
             description: "Long-lasting, alcohol-free concentrated fragrance oils",
             price: 8500,
             originalPrice: 10000,
-            image: "images/products/perfume-oil.jpg",
+            image: "images/products/product1.jpg",
             badge: "Bestseller",
             variants: ["10ml", "20ml", "50ml"],
             inStock: true
@@ -32,7 +32,7 @@ const PRODUCTS_DATA = {
             description: "Authentic designer fragrances in original packaging",
             price: 25000,
             originalPrice: 35000,
-            image: "images/products/designer-perfume.jpg",
+            image: "images/products/product2.jpg",
             badge: "Popular",
             variants: ["30ml", "50ml", "100ml"],
             inStock: true
