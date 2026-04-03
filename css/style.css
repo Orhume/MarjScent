@@ -1322,3 +1322,144 @@ body {
         padding: 1.5rem;
     }
 }
+/* ========================================
+   NEW REVIEWS SECTION STYLES
+   ======================================== */
+
+.reviews-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: white;
+}
+
+.reviews-section .container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.reviews-section .section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.reviews-section .section-label {
+    color: #C9A962;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.reviews-section .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.review-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.review-screenshot {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background: #111;
+    position: relative;
+}
+
+.review-screenshot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.review-screenshot::after {
+    content: '💬 WhatsApp Review';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #25D366;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.review-content {
+    padding: 20px;
+}
+
+.reviewer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.reviewer-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+}
+
+.verified-tag {
+    color: #25D366;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.review-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+    margin-bottom: 12px;
+}
+
+.review-product {
+    font-size: 12px;
+    color: #C9A962;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .reviews-section {
+        padding: 60px 15px;
+    }
+    
+    .reviews-section .section-title {
+        font-size: 32px;
+    }
+    
+    .reviews-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .review-screenshot {
+        height: 350px;
+    }
+}
