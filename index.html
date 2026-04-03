@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marj Scents | Luxury Fragrances</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <a href="#" class="nav-logo">Marj <span>Scents</span></a>
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#story">Our Story</a></li>
+            <li><a href="#products">Collection</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <button class="nav-icon" onclick="openScentFinder()" title="Find Your Scent">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="nav-icon" onclick="toggleCart()" title="Cart">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-visual"></div>
+        <div class="hero-content">
+            <p class="hero-subtitle">Alluring Fragrances</p>
+            <h1 class="hero-title">Luxury Within Reach</h1>
+            <p class="hero-description">
+                Helping you smell good, feel confident, and own a piece of luxury. 
+                Premium fragrances crafted for every moment, every mood, every you.
+            </p>
+            <a href="#products" class="hero-cta">
+                Explore Collection <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Brand Story -->
+    <section class="brand-story" id="story">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Our Story</p>
+                <h2 class="section-title">Born from Passion</h2>
+            </div>
+            
+            <div class="story-grid">
+                <div class="story-image"></div>
+                <div class="story-content">
+                    <h3>A Love Letter to Fragrance</h3>
+                    <p>
+                        Marj Scents was born from a simple yet powerful love for perfumes. 
+                        What started as a personal passion quickly grew into a mission: 
+                        to create and provide exquisite fragrances for everyone, without 
+                        breaking the bank.
+                    </p>
+                    <p>
+                        We believe that luxury shouldn't be exclusive. Every bottle we 
+                        craft carries the essence of sophistication, confidence, and 
+                        individuality.
+                    </p>
+                    <div class="story-quote">
+                        "Helping you smell good, feel confident, and own a piece of luxury."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">The Collection</p>
+                <h2 class="section-title">Discover Your Signature</h2>
+            </div>
+
+            <div class="products-grid" id="productsGrid">
+                <!-- Products loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews" id="reviews">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Testimonials</p>
+                <h2 class="section-title">What Our Clients Say</h2>
+            </div>
+
+            <div class="reviews-grid" id="reviewsGrid">
+                <!-- Reviews loaded by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp CTA -->
+    <section class="whatsapp-cta">
+        <h2>Prefer to Order via WhatsApp?</h2>
+        <p>Get personalized recommendations and instant support</p>
+        <a href="https://wa.me/2347062297760?text=Hello%20Marj%20Scents!%20I'm%20interested%20in%20your%20fragrances." 
+           class="whatsapp-button" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            Chat with Us on WhatsApp
+        </a>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-container">
+            <div class="section-header">
+                <p class="section-label">Get in Touch</p>
+                <h2 class="section-title">Visit Our Atelier</h2>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Contact Information</h3>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Location</strong>
+                            <p>Plot K26 Cooperative Villa Estate,<br>Badore Ajah, Lagos, Nigeria</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Phone / WhatsApp</strong>
+                            <p>0706 229 7760</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email</strong>
+                            <p>Marisosaigboyo@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Working Hours</strong>
+                            <p>Open 24 Hours</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <a href="https://tiktok.com/@marjscents" target="_blank" title="TikTok">
+                            <i class="fab fa-tiktok"></i>
+                        </a>
+                        <a href="https://wa.me/2347062297760" target="_blank" title="WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:Marisosaigboyo@gmail.com" title="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="contact-map">
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <p>Badore Ajah, Lagos</p>
+                        <p style="font-size: 0.9rem; margin-top: 0.5rem;">Plot K26 Cooperative Villa Estate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">Marj Scents</div>
+        <p class="footer-tagline">"Alluring Fragrances - Luxury, Classy"</p>
+        
+        <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#story">Our Story</a>
+            <a href="#products">Collection</a>
+            <a href="#reviews">Reviews</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2026 Marj Scents. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>Your Experience</h2>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items loaded here -->
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-subtotal">
+                <span>Subtotal</span>
+                <strong id="cartTotal">₦0</strong>
+            </div>
+            <button class="checkout-btn" onclick="checkoutWhatsApp()">
+                <i class="fab fa-whatsapp"></i>
+                Order via WhatsApp
+            </button>
+            <button class="continue-shopping" onclick="toggleCart()">
+                Continue Shopping
+            </button>
+        </div>
+    </div>
+
+    <!-- Scent Finder Modal -->
+    <div class="modal-overlay" id="scentFinderModal">
+        <div class="scent-finder">
+            <button class="close-modal" onclick="closeScentFinder()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="finder-step" id="finderStep1">
+                <h3>What mood are you seeking?</h3>
+                <div class="finder-options">
+                    <div class="finder-option" onclick="selectOption('mood', 'romantic')">
+                        <i class="fas fa-heart"></i>
+                        <div>Romantic & Sensual</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('mood', 'fresh')">
+                        <i class="fas fa-leaf"></i>
+                        <div>Fresh & Clean</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('mood', 'bold')">
+                        <i class="fas fa-fire"></i>
+                        <div>Bold & Powerful</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('mood', 'calm')">
+                        <i class="fas fa-spa"></i>
+                        <div>Calm & Relaxing</div>
+                    </div>
+                </div>
+                <div class="finder-nav">
+                    <span></span>
+                    <button class="finder-btn" onclick="nextStep()" id="step1Btn" disabled>Next</button>
+                </div>
+            </div>
+
+            <div class="finder-step" id="finderStep2" style="display: none;">
+                <h3>When do you wear fragrance?</h3>
+                <div class="finder-options">
+                    <div class="finder-option" onclick="selectOption('occasion', 'day')">
+                        <i class="fas fa-sun"></i>
+                        <div>Daytime / Work</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('occasion', 'night')">
+                        <i class="fas fa-moon"></i>
+                        <div>Evening / Special</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('occasion', 'daily')">
+                        <i class="fas fa-infinity"></i>
+                        <div>Everyday Signature</div>
+                    </div>
+                    <div class="finder-option" onclick="selectOption('occasion', 'gifting')">
+                        <i class="fas fa-gift"></i>
+                        <div>Gifting</div>
+                    </div>
+                </div>
+                <div class="finder-nav">
+                    <button class="finder-btn secondary" onclick="prevStep()">Back</button>
+                    <button class="finder-btn" onclick="showResults()" id="step2Btn" disabled>Find My Scent</button>
+                </div>
+            </div>
+
+            <div class="finder-step" id="finderResults" style="display: none;">
+                <h3>Your Perfect Match</h3>
+                <div id="recommendationContent"></div>
+                <div class="finder-nav">
+                    <button class="finder-btn secondary" onclick="resetFinder()">Start Over</button>
+                    <button class="finder-btn" onclick="closeScentFinder()">Browse Collection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
