@@ -1,20 +1,139 @@
 // ========================================
-// MARJ SCENTS - MAIN JAVASCRIPT
+// MARJ SCENTS - MAIN JAVASCRIPT (FIXED)
 // ========================================
 
 // Global state
 let cart = [];
-// Add this RIGHT AFTER the first line of main.js
-console.log("Reviews data:", REVIEWS_DATA);
-console.log("Number of reviews:", REVIEWS_DATA.length);
 let finderSelections = {};
 
+// ========================================
+// INITIALIZATION
+// ========================================
 
-// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    renderProducts();
-   function renderReviews() {
+    console.log("DOM Loaded - Initializing...");
+    
+    // Check if data is available
+    if (typeof PRODUCTS_DATA === 'undefined') {
+        console.error("ERROR: PRODUCTS_DATA is not loaded! Check if products.js is loaded before main.js");
+        document.getElementById('productsGrid').innerHTML = '<p style="text-align:center;padding:2rem;">Error loading products. Please refresh.</p>';
+        return;
+    }
+    
+    if (typeof REVIEWS_DATA === 'undefined') {
+        console.error("ERROR: REVIEWS_DATA is not loaded!");
+    }
+    
+    console.log("Products found:", PRODUCTS_DATA.products.length);
+    
+    // Initialize everything
+    try {
+        renderProducts();
+        renderReviews();
+        updateCartUI();
+        setupEventListeners();
+        setupScrollEffects();
+        setupAnimations();
+        console.log("All functions initialized successfully!");
+    } catch (error) {
+        console.error("Error during initialization:", error);
+    }
+});
+
+// ========================================
+// PRODUCT RENDERING
+// ========================================
+
+function renderProducts() {
+    const grid = document.getElementById('productsGrid');
+    
+    if (!grid) {
+        console.error("ERROR: productsGrid element not found in HTML!");
+        return;
+    }
+    
+    if (!PRODUCTS_DATA || !PRODUCTS_DATA.products || PRODUCTS_DATA.products.length === 0) {
+        console.error("ERROR: No products data available");
+        grid.innerHTML = '<p style="text-align:center;padding:2rem;">No products available.</p>';
+        return;
+    }
+    
+    const products = PRODUCTS_DATA.products;
+    console.log("Rendering", products.length, "products...");
+    
+    grid.innerHTML = products.map(product => {
+        // Handle image - use product.image or fallback to numbered images
+        let imageHtml;
+        if (product.image) {
+            // Add error handler to fallback to emoji if image fails to load
+            imageHtml = `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\\'font-size: 4rem;\\'>${getProductEmoji(product.category)}</span>';">`;
+        } else {
+            imageHtml = `<span style="font-size: 4rem;">${getProductEmoji(product.category)}</span>`;
+        }
+        
+        const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
+        const originalPriceHtml = product.originalPrice ? `<span class="original">₦${product.originalPrice.toLocaleString()}</span>` : '';
+        
+        return `
+            <div class="product-card fade-in" onclick="showProductDetails(${product.id})">
+                <div class="product-image">
+                    ${badgeHtml}
+                    ${imageHtml}
+                </div>
+                <div class="product-info">
+                    <p class="product-category">${product.category}</p>
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-footer">
+                        <div class="product-price">
+                            <span class="currency">₦</span>${product.price.toLocaleString()}
+                            ${originalPriceHtml}
+                        </div>
+                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    console.log("Products rendered successfully!");
+}
+
+function getProductEmoji(category) {
+    const emojis = {
+        "Signature Collection": "🧴",
+        "Luxury Line": "🎁",
+        "Home Fragrance": "🌸",
+        "Ambiance": "🕯️",
+        "Daily Wear": "💨",
+        "Accessories": "✨",
+        "Home & Car": "🏠",
+        "Premium Oils": "💎"
+    };
+    return emojis[category] || "🧴";
+}
+
+// ========================================
+// REVIEWS RENDERING (FIXED - only one definition)
+// ========================================
+
+function renderReviews() {
+    // Check if we're using the old reviews section or new one
     const grid = document.getElementById('reviewsGrid');
+    
+    // If reviewsGrid doesn't exist, the HTML uses static reviews (new version)
+    if (!grid) {
+        console.log("reviewsGrid not found - using static HTML reviews");
+        return;
+    }
+    
+    // Old dynamic reviews rendering (if needed)
+    if (typeof REVIEWS_DATA === 'undefined') {
+        console.error("REVIEWS_DATA not loaded");
+        return;
+    }
     
     grid.innerHTML = REVIEWS_DATA.map(review => `
         <div class="review-card fade-in" onclick="openReviewModal(${review.id})">
@@ -38,6 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 
 function openReviewModal(reviewId) {
+    if (typeof REVIEWS_DATA === 'undefined') return;
+    
     const review = REVIEWS_DATA.find(r => r.id === reviewId);
     if (!review) return;
     
@@ -74,95 +195,14 @@ function closeReviewModal() {
         }, 300);
     }
 }
-    updateCartUI();
-    setupEventListeners();
-    setupScrollEffects();
-    setupAnimations();
-});
-
-// ========================================
-// PRODUCT RENDERING
-// ========================================
-
-function renderProducts() {
-    const grid = document.getElementById('productsGrid');
-    const products = PRODUCTS_DATA.products;
-    
-    grid.innerHTML = products.map(product => {
-        // Use emoji as placeholder if no image
-        const displayContent = product.image ? 
-            `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-            `<span style="font-size: 4rem;">${getProductEmoji(product.category)}</span>`;
-        
-        const badgeHtml = product.badge ? 
-            `<span class="product-badge">${product.badge}</span>` : '';
-        
-        const originalPriceHtml = product.originalPrice ? 
-            `<span class="original">₦${product.originalPrice.toLocaleString()}</span>` : '';
-        
-        return `
-            <div class="product-card fade-in" onclick="showProductDetails(${product.id})">
-                <div class="product-image">
-                    ${badgeHtml}
-                    ${displayContent}
-                </div>
-                <div class="product-info">
-                    <p class="product-category">${product.category}</p>
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description}</p>
-                    <div class="product-footer">
-                        <div class="product-price">
-                            <span class="currency">₦</span>${product.price.toLocaleString()}
-                            ${originalPriceHtml}
-                        </div>
-                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-    }).join('');
-}
-
-function getProductEmoji(category) {
-    const emojis = {
-        "Signature Collection": "🧴",
-        "Luxury Line": "🎁",
-        "Home Fragrance": "🌸",
-        "Ambiance": "🕯️",
-        "Daily Wear": "💨",
-        "Accessories": "✨",
-        "Home & Car": "🏠",
-        "Premium Oils": "💎"
-    };
-    return emojis[category] || "🧴";
-}
-
-// ========================================
-// REVIEWS RENDERING
-// ========================================
-
-function renderReviews() {
-    const grid = document.getElementById('reviewsGrid');
-    
-    grid.innerHTML = REVIEWS_DATA.map(review => `
-        <div class="review-card fade-in">
-            <div class="review-header">
-                <span class="reviewer-name">${review.name}</span>
-                <span class="review-stars">${'★'.repeat(review.rating)}</span>
-            </div>
-            <p class="review-text">"${review.text}"</p>
-            <p class="review-product">${review.product}</p>
-        </div>
-    `).join('');
-}
 
 // ========================================
 // CART FUNCTIONS
 // ========================================
 
 function addToCart(productId) {
+    if (typeof PRODUCTS_DATA === 'undefined') return;
+    
     const product = PRODUCTS_DATA.products.find(p => p.id === productId);
     if (!product || !product.inStock) return;
     
@@ -178,14 +218,12 @@ function addToCart(productId) {
             image: product.image,
             category: product.category,
             quantity: 1,
-            selectedVariant: product.variants[0]
+            selectedVariant: product.variants ? product.variants[0] : 'Default'
         });
     }
     
     updateCartUI();
     toggleCart();
-    
-    // Show success feedback
     showNotification(`${product.name} added to cart`);
 }
 
@@ -209,6 +247,11 @@ function updateCartUI() {
     const cartFooter = document.getElementById('cartFooter');
     const cartTotal = document.getElementById('cartTotal');
     
+    if (!cartCount || !cartItems) {
+        console.error("Cart elements not found");
+        return;
+    }
+    
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
@@ -222,7 +265,7 @@ function updateCartUI() {
                 <p style="font-size: 0.9rem; margin-top: 0.5rem;">Add items to begin your fragrance journey</p>
             </div>
         `;
-        cartFooter.style.display = 'none';
+        if (cartFooter) cartFooter.style.display = 'none';
     } else {
         cartItems.innerHTML = cart.map((item, index) => `
             <div class="cart-item">
@@ -240,32 +283,100 @@ function updateCartUI() {
                 </div>
             </div>
         `).join('');
-        cartFooter.style.display = 'block';
-        cartTotal.textContent = '₦' + subtotal.toLocaleString();
+        if (cartFooter) {
+            cartFooter.style.display = 'block';
+            cartTotal.textContent = '₦' + subtotal.toLocaleString();
+        }
     }
 }
 
 function toggleCart() {
-    document.getElementById('cartOverlay').classList.toggle('active');
-    document.getElementById('cartDrawer').classList.toggle('active');
-    document.body.style.overflow = document.getElementById('cartDrawer').classList.contains('active') ? 'hidden' : '';
+    const overlay = document.getElementById('cartOverlay');
+    const drawer = document.getElementById('cartDrawer');
+    
+    if (!overlay || !drawer) {
+        console.error("Cart elements not found");
+        return;
+    }
+    
+    overlay.classList.toggle('active');
+    drawer.classList.toggle('active');
+    document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
 }
 
 // ========================================
 // WHATSAPP CHECKOUT
 // ========================================
 
-function checkoutWhatsApp() {
-    if (cart.length === 0) return;
+// ========================================
+// CHECKOUT FUNCTIONS (NEW)
+// ========================================
+
+function openCheckout() {
+    if (cart.length === 0) {
+        showNotification("Your cart is empty!");
+        return;
+    }
     
+    const modal = document.getElementById('checkoutModal');
+    const itemsContainer = document.getElementById('checkoutItems');
+    const totalElement = document.getElementById('checkoutTotal');
+    
+    // Populate order summary
+    itemsContainer.innerHTML = cart.map(item => `
+        <div class="checkout-item">
+            <span>${item.name} (${item.selectedVariant}) x${item.quantity}</span>
+            <span>₦${(item.price * item.quantity).toLocaleString()}</span>
+        </div>
+    `).join('');
+    
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    totalElement.textContent = '₦' + subtotal.toLocaleString();
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    // Close cart drawer if open
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartOverlay = document.getElementById('cartOverlay');
+    if (cartDrawer && cartDrawer.classList.contains('active')) {
+        cartDrawer.classList.remove('active');
+        cartOverlay.classList.remove('active');
+    }
+}
+
+function closeCheckout() {
+    const modal = document.getElementById('checkoutModal');
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function submitOrder(event) {
+    event.preventDefault();
+    
+    // Get form values
+    const name = document.getElementById('customerName').value.trim();
+    const phone = document.getElementById('customerPhone').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
+    const address = document.getElementById('deliveryAddress').value.trim();
+    
+    // Validate
+    if (!name || !phone || !address) {
+        showNotification("Please fill in all required fields!");
+        return;
+    }
+    
+    // Build WhatsApp message
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const business = PRODUCTS_DATA.business;
     
     let message = `*New Order from ${business.name} Website*%0A%0A`;
     message += `*Customer Details:*%0A`;
-    message += `Name: [Please enter your name]%0A`;
-    message += `Phone: [Please enter your phone]%0A`;
-    message += `Address: [Please enter delivery address]%0A%0A`;
+    message += `Name: ${name}%0A`;
+    message += `Phone: ${phone}%0A`;
+    if (email) message += `Email: ${email}%0A`;
+    message += `Address: ${address}%0A%0A`;
     message += `*Order Items:*%0A`;
     
     cart.forEach((item, index) => {
@@ -277,57 +388,160 @@ function checkoutWhatsApp() {
     message += `*Total: ₦${subtotal.toLocaleString()} + Delivery*%0A%0A`;
     message += `Please confirm availability and send payment details.`;
     
+    // Open WhatsApp
     const whatsappURL = `https://wa.me/${business.whatsapp}?text=${message}`;
     window.open(whatsappURL, '_blank');
     
-    // Optional: Clear cart after checkout
-    // cart = [];
-    // updateCartUI();
-    // toggleCart();
+    // Clear cart and close modal
+    cart = [];
+    updateCartUI();
+    closeCheckout();
+    showNotification("Order sent! Check your WhatsApp.");
+    
+    // Reset form
+    document.getElementById('checkoutForm').reset();
 }
 
+// ========================================
+// UPDATED CART FUNCTIONS
+// ========================================
+
+function updateCartUI() {
+    const cartCount = document.getElementById('cartCount');
+    const cartItems = document.getElementById('cartItems');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (!cartCount || !cartItems) {
+        console.error("Cart elements not found");
+        return;
+    }
+    
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    cartCount.textContent = totalItems;
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <p>Your experience is waiting</p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Add items to begin your fragrance journey</p>
+            </div>
+        `;
+        if (cartFooter) cartFooter.style.display = 'none';
+    } else {
+        cartItems.innerHTML = cart.map((item, index) => `
+            <div class="cart-item">
+                <div class="cart-item-image">${getProductEmoji(item.category)}</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-variant">${item.selectedVariant}</div>
+                    <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+                    <div class="cart-item-actions">
+                        <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                        <span>${item.quantity}</span>
+                        <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+                        <span class="remove-item" onclick="removeFromCart(${index})">Remove</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        if (cartFooter) {
+            cartFooter.style.display = 'block';
+            cartTotal.textContent = '₦' + subtotal.toLocaleString();
+        }
+    }
+}
+
+// ========================================
+// UPDATED EVENT LISTENERS
+// ========================================
+
+function setupEventListeners() {
+    // Close modals on escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeScentFinder();
+            closeCheckout(); // Add this
+            const cartDrawer = document.getElementById('cartDrawer');
+            if (cartDrawer && cartDrawer.classList.contains('active')) {
+                toggleCart();
+            }
+            closeReviewModal();
+        }
+    });
+    
+    // Close checkout when clicking overlay
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) {
+                closeCheckout();
+            }
+        });
+    }
+}
 // ========================================
 // SCENT FINDER QUIZ
 // ========================================
 
 function openScentFinder() {
-    document.getElementById('scentFinderModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    resetFinder();
+    const modal = document.getElementById('scentFinderModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        resetFinder();
+    }
 }
 
 function closeScentFinder() {
-    document.getElementById('scentFinderModal').classList.remove('active');
-    document.body.style.overflow = '';
+    const modal = document.getElementById('scentFinderModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 function selectOption(category, value) {
     finderSelections[category] = value;
     
     // Visual feedback
-    const options = event.currentTarget.parentElement.querySelectorAll('.finder-option');
-    options.forEach(opt => opt.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
+    if (event && event.currentTarget) {
+        const options = event.currentTarget.parentElement.querySelectorAll('.finder-option');
+        options.forEach(opt => opt.classList.remove('selected'));
+        event.currentTarget.classList.add('selected');
+    }
     
     // Enable next button
-    if (category === 'mood') {
-        document.getElementById('step1Btn').disabled = false;
-    } else if (category === 'occasion') {
-        document.getElementById('step2Btn').disabled = false;
+    const step1Btn = document.getElementById('step1Btn');
+    const step2Btn = document.getElementById('step2Btn');
+    
+    if (category === 'mood' && step1Btn) {
+        step1Btn.disabled = false;
+    } else if (category === 'occasion' && step2Btn) {
+        step2Btn.disabled = false;
     }
 }
 
 function nextStep() {
-    document.getElementById('finderStep1').style.display = 'none';
-    document.getElementById('finderStep2').style.display = 'block';
+    const step1 = document.getElementById('finderStep1');
+    const step2 = document.getElementById('finderStep2');
+    if (step1) step1.style.display = 'none';
+    if (step2) step2.style.display = 'block';
 }
 
 function prevStep() {
-    document.getElementById('finderStep2').style.display = 'none';
-    document.getElementById('finderStep1').style.display = 'block';
+    const step1 = document.getElementById('finderStep1');
+    const step2 = document.getElementById('finderStep2');
+    if (step2) step2.style.display = 'none';
+    if (step1) step1.style.display = 'block';
 }
 
 function showResults() {
+    if (typeof PRODUCTS_DATA === 'undefined') return;
+    
     const recommendations = {
         'romantic': ['Premium Perfume Oils', 'Black Opium (Inspired)', 'Baccarat Rouge (Inspired)'],
         'fresh': ['Body Spray & Mist', 'Room Sprays', 'Air Fresheners'],
@@ -345,10 +559,14 @@ function showResults() {
     
     const recProducts = PRODUCTS_DATA.products.filter(p => allRecs.includes(p.name)).slice(0, 2);
     
-    document.getElementById('finderStep2').style.display = 'none';
-    document.getElementById('finderResults').style.display = 'block';
+    const step2 = document.getElementById('finderStep2');
+    const results = document.getElementById('finderResults');
+    
+    if (step2) step2.style.display = 'none';
+    if (results) results.style.display = 'block';
     
     const contentDiv = document.getElementById('recommendationContent');
+    if (!contentDiv) return;
     
     if (recProducts.length > 0) {
         contentDiv.innerHTML = `
@@ -383,11 +601,18 @@ function showResults() {
 function resetFinder() {
     finderSelections = {};
     document.querySelectorAll('.finder-option').forEach(opt => opt.classList.remove('selected'));
-    document.getElementById('step1Btn').disabled = true;
-    document.getElementById('step2Btn').disabled = true;
-    document.getElementById('finderStep1').style.display = 'block';
-    document.getElementById('finderStep2').style.display = 'none';
-    document.getElementById('finderResults').style.display = 'none';
+    
+    const step1Btn = document.getElementById('step1Btn');
+    const step2Btn = document.getElementById('step2Btn');
+    const step1 = document.getElementById('finderStep1');
+    const step2 = document.getElementById('finderStep2');
+    const results = document.getElementById('finderResults');
+    
+    if (step1Btn) step1Btn.disabled = true;
+    if (step2Btn) step2Btn.disabled = true;
+    if (step1) step1.style.display = 'block';
+    if (step2) step2.style.display = 'none';
+    if (results) results.style.display = 'none';
 }
 
 // ========================================
@@ -395,17 +620,12 @@ function resetFinder() {
 // ========================================
 
 function showProductDetails(productId) {
+    if (typeof PRODUCTS_DATA === 'undefined') return;
+    
     const product = PRODUCTS_DATA.products.find(p => p.id === productId);
     if (!product) return;
     
-    // Simple alert for now - can be expanded to modal
-    const message = `
-${product.name}
-${product.description}
-Price: ₦${product.price.toLocaleString()}
-Sizes: ${product.variants.join(', ')}
-
-Click OK to add to cart!`;
+    const message = `${product.name}\n${product.description}\nPrice: ₦${product.price.toLocaleString()}\nSizes: ${product.variants ? product.variants.join(', ') : 'N/A'}\n\nClick OK to add to cart!`;
     
     if (confirm(message)) {
         addToCart(productId);
@@ -413,7 +633,6 @@ Click OK to add to cart!`;
 }
 
 function showNotification(message) {
-    // Create notification element
     const notif = document.createElement('div');
     notif.style.cssText = `
         position: fixed;
@@ -442,15 +661,18 @@ function setupEventListeners() {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeScentFinder();
-            if (document.getElementById('cartDrawer').classList.contains('active')) {
+            const cartDrawer = document.getElementById('cartDrawer');
+            if (cartDrawer && cartDrawer.classList.contains('active')) {
                 toggleCart();
             }
+            closeReviewModal();
         }
     });
 }
 
 function setupScrollEffects() {
     const navbar = document.getElementById('navbar');
+    if (!navbar) return;
     
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
@@ -474,9 +696,10 @@ function setupAnimations() {
 }
 
 function toggleMobileMenu() {
-    // Simple toggle for mobile menu
     const navLinks = document.querySelector('.nav-links');
-    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    if (navLinks) {
+        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+    }
 }
 
 // Add CSS animations dynamically
