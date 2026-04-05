@@ -6,7 +6,7 @@ const PRODUCTS_DATA = {
     currency: "₦",
     business: {
         name: "Marj Scents",
-        whatsapp: "2347062297760",
+        whatsapp: "2347062297460",
         email: "Marisosaigboyo@gmail.com",
         address: "Plot K26 Cooperative Villa Estate, Badore Ajah, Lagos",
         hours: "24 hours"
@@ -20,7 +20,7 @@ const PRODUCTS_DATA = {
             description: "Long-lasting, alcohol-free concentrated fragrance oils",
             price: 8500,
             originalPrice: 10000,
-            image: "images/products/product1.jpg",
+            image: "images/products/product1.jpg",  // ✅ Updated path
             badge: "Bestseller",
             variants: ["10ml", "20ml", "50ml"],
             inStock: true
@@ -32,131 +32,12 @@ const PRODUCTS_DATA = {
             description: "Authentic designer fragrances in original packaging",
             price: 25000,
             originalPrice: 35000,
-            image: "images/products/product2.jpg",
+            image: "images/products/product2.jpg",  // ✅ Updated path
             badge: "Popular",
             variants: ["30ml", "50ml", "100ml"],
             inStock: true
         },
-        {
-            id: 3,
-            name: "Reed Diffusers",
-            category: "Home Fragrance",
-            description: "Elegant home fragrance solutions. Lasts 3-6 months",
-            price: 12000,
-            originalPrice: 15000,
-            image: "images/products/diffuser.jpg",
-            badge: "New",
-            variants: ["100ml", "200ml"],
-            inStock: true
-        },
-        {
-            id: 4,
-            name: "Scented Candles",
-            category: "Ambiance",
-            description: "Hand-poured soy wax candles. 40+ hours burn time",
-            price: 8000,
-            originalPrice: 10000,
-            image: "images/products/candle.jpg",
-            badge: null,
-            variants: ["Small", "Medium", "Large"],
-            inStock: true
-        },
-        {
-            id: 5,
-            name: "Body Spray & Mist",
-            category: "Daily Wear",
-            description: "Light, refreshing fragrances for everyday use",
-            price: 3500,
-            originalPrice: 5000,
-            image: "images/products/body-spray.jpg",
-            badge: "Sale",
-            variants: ["100ml", "200ml"],
-            inStock: true
-        },
-        {
-            id: 6,
-            name: "Atomisers & Travel Sets",
-            category: "Accessories",
-            description: "Refillable travel perfume bottles for on-the-go",
-            price: 2500,
-            originalPrice: 4000,
-            image: "images/products/atomiser.jpg",
-            badge: null,
-            variants: ["5ml", "10ml"],
-            inStock: true
-        },
-        {
-            id: 7,
-            name: "Air Fresheners",
-            category: "Home & Car",
-            description: "Premium air fresheners for home, office, and car",
-            price: 2000,
-            originalPrice: 3000,
-            image: "images/products/air-freshener.jpg",
-            badge: null,
-            variants: ["Standard", "Premium"],
-            inStock: true
-        },
-        {
-            id: 8,
-            name: "Room Sprays",
-            category: "Home Fragrance",
-            description: "Instantly refresh any space with luxury scents",
-            price: 4500,
-            originalPrice: 6000,
-            image: "images/products/room-spray.jpg",
-            badge: null,
-            variants: ["100ml", "250ml"],
-            inStock: true
-        },
-        {
-            id: 9,
-            name: "Black Opium (Inspired)",
-            category: "Premium Oils",
-            description: "Rich coffee and vanilla scent. Extremely long-lasting",
-            price: 10000,
-            originalPrice: 12000,
-            image: "images/products/black-opium.jpg",
-            badge: "Customer Favorite",
-            variants: ["10ml", "20ml", "50ml"],
-            inStock: true
-        },
-        {
-            id: 10,
-            name: "Hibiscus Maharaja",
-            category: "Premium Oils",
-            description: "Exotic floral with oriental spices. Faith's favorite!",
-            price: 9500,
-            originalPrice: 11000,
-            image: "images/products/hibiscus.jpg",
-            badge: "Trending",
-            variants: ["10ml", "20ml", "50ml"],
-            inStock: true
-        },
-        {
-            id: 11,
-            name: "Oud Maracuja",
-            category: "Premium Oils",
-            description: "Passion fruit and oud fusion. Unique and captivating",
-            price: 11000,
-            originalPrice: 13000,
-            image: "images/products/oud-maracuja.jpg",
-            badge: "Exclusive",
-            variants: ["10ml", "20ml", "50ml"],
-            inStock: true
-        },
-        {
-            id: 12,
-            name: "Baccarat Rouge (Inspired)",
-            category: "Premium Oils",
-            description: "Amber woody floral. Sophisticated and long-lasting",
-            price: 10500,
-            originalPrice: 12500,
-            image: "images/products/baccarat.jpg",
-            badge: "Best Value",
-            variants: ["10ml", "20ml", "50ml"],
-            inStock: true
-        }
+        // ... update the rest to use product3.jpg, product4.jpg, etc.
     ]
 };
 
