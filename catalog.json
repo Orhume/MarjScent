@@ -1,35 +1,45 @@
 {
   "lastUpdated": "2026-04-07",
-  "version": "1.0",
-  "business": {
-    "name": "Marj Scents",
-    "whatsapp": "2347062297460",
-    "email": "Marisosaigbovo@gmail.com",
-    "currency": "₦"
-  },
   "products": [
     {
       "id": 1,
       "name": "Premium Perfume Oils",
       "price": 8500,
       "originalPrice": 10000,
-      "description": "Long-lasting, alcohol-free concentrated fragrance oils",
-      "category": "Signature Collection",
-      "inStock": true,
-      "badge": "Bestseller",
-      "variants": ["10ml", "20ml", "50ml"]
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product1.jpg"
     },
     {
       "id": 2,
       "name": "Designer Boxed Perfumes",
       "price": 25000,
       "originalPrice": 35000,
-      "description": "Authentic designer fragrances in original packaging",
-      "category": "Luxury Line",
-      "inStock": true,
-      "badge": "Popular",
-      "variants": ["30ml", "50ml", "100ml"]
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product2.jpg"
     },
-    
-  ]
-}
+    {
+      "id": 3,
+      "name": "Reed Diffusers",
+      "price": 12000,
+      "originalPrice": 15000,
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product3.jpg"
+    },
+    {
+      "id": 4,
+      "name": "Scented Candles",
+      "price": 8000,
+      "originalPrice": 10000,
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product4.jpg"
+    },
+    {
+      "id": 5,
+      "name": "Body Spray & Mist",
+      "price": 3500,
+      "originalPrice": 5000,
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product5.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Atomisers & Travel Sets",
+      "price": 2500,
+      "originalPrice": 4000,
+      "image": "https://raw.githubusercontent.com/Orhume/MarjScent/main/images/products/product6.jpg"
+    },
