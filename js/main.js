@@ -1,32 +1,93 @@
 // ========================================
-// MARJ SCENTS - MAIN JAVASCRIPT (FIXED)
+// MARJ SCENTS - MAIN JAVASCRIPT (WITH GITHUB FETCH)
 // ========================================
 
-// Global state
 let cart = [];
 let finderSelections = {};
+let PRODUCTS_DATA = null;
+const REVIEWS_DATA = [];
 
-// ========================================
-// INITIALIZATION
-// ========================================
+// GitHub Raw URL - REPLACE WITH YOUR ACTUAL USERNAME
+const CATALOG_URL = 'https://raw.githubusercontent.com/Orhume/MarjScent/refs/heads/main/catalog.json?token=GHSAT0AAAAAADZJQB6LT2Y3GZ7M44KPDY662OVGEZA';
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM Loaded - Initializing...");
-    
-    // Check if data is available
-    if (typeof PRODUCTS_DATA === 'undefined') {
-        console.error("ERROR: PRODUCTS_DATA is not loaded! Check if products.js is loaded before main.js");
-        document.getElementById('productsGrid').innerHTML = '<p style="text-align:center;padding:2rem;">Error loading products. Please refresh.</p>';
-        return;
+// Fallback data if GitHub fails
+const FALLBACK_DATA = {
+    currency: "₦",
+    business: {
+        name: "Marj Scents",
+        whatsapp: "2347062297460",
+        email: "Marisosaigbovo@gmail.com",
+        address: "Plot K26 Cooperative Villa Estate, Badore Ajah, Lagos",
+        hours: "24 hours"
+    },
+    products: [
+        // COPY YOUR 12 PRODUCTS HERE AS BACKUP
+        {
+            id: 1,
+            name: "Premium Perfume Oils",
+            category: "Signature Collection",
+            description: "Long-lasting, alcohol-free concentrated fragrance oils",
+            price: 8500,
+            originalPrice: 10000,
+            image: "images/products/product1.jpg",
+            badge: "Bestseller",
+            variants: ["10ml", "20ml", "50ml"],
+            inStock: true
+        },
+        {
+            id: 2,
+            name: "Designer Boxed Perfumes",
+            category: "Luxury Line",
+            description: "Authentic designer fragrances in original packaging",
+            price: 25000,
+            originalPrice: 35000,
+            image: "images/products/product2.jpg",
+            badge: "Popular",
+            variants: ["30ml", "50ml", "100ml"],
+            inStock: true
+        },
+        // ... ADD PRODUCTS 3-12 HERE (copy from your old file)
+    ]
+};
+
+// Load from GitHub
+async function loadCatalog() {
+    try {
+        console.log("Fetching from GitHub...");
+        const response = await fetch(CATALOG_URL);
+        if (!response.ok) throw new Error('Failed');
+        
+        const catalog = await response.json();
+        
+        PRODUCTS_DATA = {
+            currency: catalog.currency || "₦",
+            business: {
+                name: catalog.business.name,
+                whatsapp: catalog.business.whatsapp,
+                email: catalog.business.email,
+                address: FALLBACK_DATA.business.address,
+                hours: FALLBACK_DATA.business.hours
+            },
+            products: catalog.products.map(p => ({
+                ...p,
+                image: `images/products/product${p.id}.jpg`,
+                variants: p.variants || ["10ml", "20ml", "50ml"]
+            }))
+        };
+        
+        console.log("✅ Loaded:", catalog.lastUpdated);
+        
+    } catch (error) {
+        console.warn("⚠️ Using fallback:", error);
+        PRODUCTS_DATA = FALLBACK_DATA;
     }
     
-    if (typeof REVIEWS_DATA === 'undefined') {
-        console.error("ERROR: REVIEWS_DATA is not loaded!");
-    }
-    
-    console.log("Products found:", PRODUCTS_DATA.products.length);
-    
-    // Initialize everything
+    // Start the app
+    initializeApp();
+}
+
+function initializeApp() {
+    console.log("Starting...");
     try {
         renderProducts();
         renderReviews();
@@ -34,16 +95,18 @@ document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
         setupScrollEffects();
         setupAnimations();
-        console.log("All functions initialized successfully!");
+        console.log("✅ Ready!");
     } catch (error) {
-        console.error("Error during initialization:", error);
+        console.error("❌ Error:", error);
     }
-});
+}
+
+// START
+document.addEventListener('DOMContentLoaded', loadCatalog);
 
 // ========================================
-// PRODUCT RENDERING
+// KEEP ALL FUNCTIONS BELOW (unchanged)
 // ========================================
-
 function renderProducts() {
     const grid = document.getElementById('productsGrid');
     
