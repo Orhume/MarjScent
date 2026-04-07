@@ -46,18 +46,7 @@ const FALLBACK_DATA = {
             variants: ["30ml", "50ml", "100ml"],
             inStock: true
         },
-         {
-            id: 3,
-            name: "Reed Diffusers",
-            category: "Home Fragrance",
-            description: "Elegant home fragrance solutions. Lasts 3-6 months",
-            price: 12000,
-            originalPrice: 15000,
-            image: "images/products/product3.jpg",
-            badge: "New",
-            variants: ["100ml", "200ml"],
-            inStock: true
-        },
+  
         // ... ADD PRODUaCTS 3-12 HERE (copy from your old file)
     ]
 };
