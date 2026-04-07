@@ -54,39 +54,41 @@ const FALLBACK_DATA = {
 // Load from GitHub
 async function loadCatalog() {
     try {
+        // Add timestamp to bust cache
+        const url = `https://raw.githubusercontent.com/Orhume/MarjScent/main/catalog.json?t=${Date.now()}`;
+        
         console.log("Fetching from GitHub...");
-        const response = await fetch(CATALOG_URL);
-        if (!response.ok) throw new Error('Failed');
+        const response = await fetch(url);
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         
         const catalog = await response.json();
         
         PRODUCTS_DATA = {
             currency: catalog.currency || "₦",
             business: {
-                name: catalog.business.name,
-                whatsapp: catalog.business.whatsapp,
-                email: catalog.business.email,
+                name: catalog.business?.name || FALLBACK_DATA.business.name,
+                whatsapp: catalog.business?.whatsapp || FALLBACK_DATA.business.whatsapp,
+                email: catalog.business?.email || FALLBACK_DATA.business.email,
                 address: FALLBACK_DATA.business.address,
                 hours: FALLBACK_DATA.business.hours
             },
             products: catalog.products.map(p => ({
                 ...p,
-                image: `images/products/product${p.id}.jpg`,
+                image: p.image || `images/products/product${p.id}.jpg`,
                 variants: p.variants || ["10ml", "20ml", "50ml"]
             }))
         };
         
-        console.log("✅ Loaded:", catalog.lastUpdated);
+        console.log("✅ Loaded fresh data:", catalog.lastUpdated);
         
     } catch (error) {
-        console.warn("⚠️ Using fallback:", error);
+        console.warn("⚠️ GitHub failed, using fallback:", error.message);
         PRODUCTS_DATA = FALLBACK_DATA;
     }
     
-    // Start the app
     initializeApp();
 }
-
 function initializeApp() {
     console.log("Starting...");
     try {
