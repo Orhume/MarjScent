@@ -1610,3 +1610,82 @@ body {
         font-size: 1.5rem;
     }
 }
+.promise-section {
+    padding: 8rem 4rem;
+    background: var(--color-stone);
+    text-align: center;
+}
+
+.promise-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    color: var(--color-gold);
+}
+
+.promise-divider span {
+    width: 60px;
+    height: 1px;
+    background: var(--color-gold);
+}
+
+.promise-divider i {
+    font-size: 1.5rem;
+}
+
+.promise-section blockquote {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-style: italic;
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.5;
+    color: var(--color-charcoal);
+}
+
+.promise-signature {
+    font-size: 1rem;
+    color: var(--color-gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+}
+
+.promise-features {
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    margin-top: 3rem;
+}
+
+.feature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.feature i {
+    font-size: 1.5rem;
+    color: var(--color-gold);
+}
+
+.feature span {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .promise-features {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    blockquote {
+        font-size: 1.5rem;
+    }
+}
