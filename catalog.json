@@ -1,0 +1,35 @@
+{
+  "lastUpdated": "2026-04-07",
+  "version": "1.0",
+  "business": {
+    "name": "Marj Scents",
+    "whatsapp": "2347062297460",
+    "email": "Marisosaigbovo@gmail.com",
+    "currency": "₦"
+  },
+  "products": [
+    {
+      "id": 1,
+      "name": "Premium Perfume Oils",
+      "price": 8500,
+      "originalPrice": 10000,
+      "description": "Long-lasting, alcohol-free concentrated fragrance oils",
+      "category": "Signature Collection",
+      "inStock": true,
+      "badge": "Bestseller",
+      "variants": ["10ml", "20ml", "50ml"]
+    },
+    {
+      "id": 2,
+      "name": "Designer Boxed Perfumes",
+      "price": 25000,
+      "originalPrice": 35000,
+      "description": "Authentic designer fragrances in original packaging",
+      "category": "Luxury Line",
+      "inStock": true,
+      "badge": "Popular",
+      "variants": ["30ml", "50ml", "100ml"]
+    },
+    
+  ]
+}
