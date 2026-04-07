@@ -8,7 +8,7 @@ let PRODUCTS_DATA = null;
 const REVIEWS_DATA = [];
 
 // GitHub Raw URL - REPLACE WITH YOUR ACTUAL USERNAME
-const CATALOG_URL = 'https://raw.githubusercontent.com/Orhume/MarjScent/refs/heads/main/catalog.json?token=GHSAT0AAAAAADZJQB6LT2Y3GZ7M44KPDY662OVGEZA';
+const CATALOG_URL = 'https://raw.githubusercontent.com/Orhume/MarjScent/main/catalog.json';
 
 // Fallback data if GitHub fails
 const FALLBACK_DATA = {
@@ -46,7 +46,19 @@ const FALLBACK_DATA = {
             variants: ["30ml", "50ml", "100ml"],
             inStock: true
         },
-        // ... ADD PRODUCTS 3-12 HERE (copy from your old file)
+         {
+            id: 3,
+            name: "Reed Diffusers",
+            category: "Home Fragrance",
+            description: "Elegant home fragrance solutions. Lasts 3-6 months",
+            price: 12000,
+            originalPrice: 15000,
+            image: "images/products/product3.jpg",
+            badge: "New",
+            variants: ["100ml", "200ml"],
+            inStock: true
+        },
+        // ... ADD PRODUaCTS 3-12 HERE (copy from your old file)
     ]
 };
 
