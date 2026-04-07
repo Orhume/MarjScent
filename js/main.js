@@ -1,17 +1,18 @@
-// ========================================
-// MARJ SCENTS - MAIN JAVASCRIPT (WITH GITHUB FETCH)
+
+// MARJ SCENTS - MAIN JAVASCRIPT
+// WITH IMAGE SUPPORT FOR CATEGORY AND PRODUCT DISPLAYS
 // ========================================
 
 let cart = [];
-let finderSelections = {};
-let PRODUCTS_DATA = null;
-const REVIEWS_DATA = [];
+let currentCategory = null;
+let currentProduct = null;
+let currentVariant = null;
 
-// GitHub Raw URL - REPLACE WITH YOUR ACTUAL USERNAME
-const CATALOG_URL = 'https://raw.githubusercontent.com/Orhume/MarjScent/main/catalog.json';
+// ========================================
+// PRODUCT DATA STRUCTURE (WITH IMAGES)
+// ========================================
 
-// Fallback data if GitHub fails
-const FALLBACK_DATA = {
+const PRODUCTS_DATA = {
     currency: "₦",
     business: {
         name: "Marj Scents",
@@ -20,277 +21,472 @@ const FALLBACK_DATA = {
         address: "Plot K26 Cooperative Villa Estate, Badore Ajah, Lagos",
         hours: "24 hours"
     },
-    products: [
-        // COPY YOUR 12 PRODUCTS HERE AS BACKUP
+    categories: [
         {
-            id: 1,
-            name: "Premium Perfume Oils",
-            category: "Signature Collection",
+            id: "body-sprays",
+            name: "Body Sprays",
+            description: "Light, refreshing daily fragrances for adults and kids",
+            badge: null,
+            image: "images/categories/body-sprays.jpg",
+            products: [
+                { name: "Body Sprays", price: 5000, stock: 10, image: "images/products/body-spray.jpg" },
+                { name: "Kids Body Sprays", price: 3500, stock: 10, image: "images/products/kids-body-spray.jpg" }
+            ]
+        },
+        {
+            id: "scented-candles",
+            name: "Scented Candles",
+            description: "Hand-poured luxury candles for ambiance",
+            badge: null,
+            image: "images/categories/scented-candles.jpg",
+            products: [
+                { name: "Scented Candles", price: 9000, stock: 10, image: "images/products/candle.jpg" }
+            ]
+        },
+        {
+            id: "diffusers",
+            name: "Diffusers",
+            description: "Elegant home and car fragrance solutions",
+            badge: "Home",
+            image: "images/categories/diffusers.jpg",
+            products: [
+                { name: "Via Pinky Diffusers", price: 10000, stock: 10, image: "images/products/via-pinky-diffuser.jpg" },
+                { name: "Diffuser Refill", price: 13500, stock: 10, image: "images/products/diffuser-refill.jpg" },
+                { name: "Car Diffusers", price: 3500, stock: 15, image: "images/products/car-diffuser.jpg" }
+            ]
+        },
+        {
+            id: "designer-perfumes",
+            name: "Designer Perfumes",
+            description: "Authentic designer fragrances",
+            badge: "Luxury",
+            image: "images/categories/designer-perfumes.jpg",
+            products: [
+                { name: "Breed Floral Satin", price: 35000, stock: 5, image: "images/products/breed-floral-satin.jpg" },
+                { name: "Oud Al Paul", price: 25000, stock: 5, image: "images/products/oud-al-paul.jpg" },
+                { name: "9pm/9am", price: 15000, stock: 5, image: "images/products/9pm-9am.jpg" },
+                { name: "Mousuf", price: 10000, stock: 5, image: "images/products/mousuf.jpg" },
+                { name: "Club de Nuit Sillage", price: 75000, stock: 3, badge: "Premium", image: "images/products/club-de-nuit-sillage.jpg" },
+                { name: "Club de Nuit Intense Man", price: 75000, stock: 3, badge: "Premium", image: "images/products/club-de-nuit-intense-man.jpg" }
+            ]
+        },
+        {
+            id: "accessories",
+            name: "Accessories",
+            description: "Perfume accessories and tools",
+            badge: null,
+            image: "images/categories/accessories.jpg",
+            products: [
+                { name: "Atomizers", price: 3500, stock: 20, image: "images/products/atomizers.jpg" }
+            ]
+        },
+        {
+            id: "perfume-oils",
+            name: "Perfume Oils",
             description: "Long-lasting, alcohol-free concentrated fragrance oils",
-            price: 8500,
-            originalPrice: 10000,
-            image: "images/products/product1.jpg",
             badge: "Bestseller",
-            variants: ["10ml", "20ml", "50ml"],
-            inStock: true
-        },
-        {
-            id: 2,
-            name: "Designer Boxed Perfumes",
-            category: "Luxury Line",
-            description: "Authentic designer fragrances in original packaging",
-            price: 25000,
-            originalPrice: 35000,
-            image: "images/products/product2.jpg",
-            badge: "Popular",
-            variants: ["30ml", "50ml", "100ml"],
-            inStock: true
-        },
-  
-        // ... ADD PRODUaCTS 3-12 HERE (copy from your old file)
+            image: "images/categories/perfume-oils.jpg",
+            products: [
+                { name: "Bacarat Rouge", variants: [{ size: "30ml", price: 16000 }], image: "images/products/bacarat-rouge.jpg" },
+                { name: "Amouage Interlude", variants: [{ size: "20ml", price: 12000 }], image: "images/products/amouage-interlude.jpg" },
+                { name: "Oud Maracuja", variants: [{ size: "20ml", price: 12000 }], image: "images/products/oud-maracuja.jpg" },
+                { name: "Bianco Latte", variants: [{ size: "10ml", price: 6000 }, { size: "6ml", price: 3500 }], image: "images/products/bianco-latte.jpg" },
+                { name: "Oud maracuja (inquiry)", price: null, image: "images/products/oud-maracuja-2.jpg" },
+                { name: "Creed aventus", price: null, image: "images/products/creed-aventus.jpg" },
+                { name: "Creed green Irish tweed", price: null, image: "images/products/creed-green-irish.jpg" },
+                { name: "Tomford black orchid", price: null, image: "images/products/tomford-black-orchid.jpg" },
+                { name: "Burberry her", price: null, image: "images/products/burberry-her.jpg" },
+                { name: "My way", price: null, image: "images/products/my-way.jpg" },
+                { name: "Amouage interlude (inquiry)", price: null, image: "images/products/amouage-interlude-2.jpg" },
+                { name: "Amouage guidance 46", price: null, image: "images/products/amouage-guidance.jpg" },
+                { name: "Hypnotic poison", price: null, image: "images/products/hypnotic-poison.jpg" },
+                { name: "Good girl", price: null, image: "images/products/good-girl.jpg" },
+                { name: "Baccarat rouge (inquiry)", price: null, image: "images/products/baccarat-rouge-2.jpg" },
+                { name: "Black opium", price: null, image: "images/products/black-opium.jpg" },
+                { name: "Black Oud", price: null, image: "images/products/black-oud.jpg" },
+                { name: "212 men", price: null, image: "images/products/212-men.jpg" },
+                { name: "212 aqua", price: null, image: "images/products/212-aqua.jpg" },
+                { name: "Prada pradox", price: null, image: "images/products/prada-pradox.jpg" },
+                { name: "Heat rush", price: null, image: "images/products/heat-rush.jpg" },
+                { name: "Pure seduction", price: null, image: "images/products/pure-seduction.jpg" },
+                { name: "Tomford Tuscan leather", price: null, image: "images/products/tomford-tuscan.jpg" },
+                { name: "Tomford tobacco Oud", price: null, image: "images/products/tomford-tobacco.jpg" },
+                { name: "Tomford Oud wood", price: null, image: "images/products/tomford-oud-wood.jpg" },
+                { name: "Tomford ombré leather", price: null, image: "images/products/tomford-ombre.jpg" },
+                { name: "Reef 33", price: null, image: "images/products/reef-33.jpg" },
+                { name: "God of fire", price: null, image: "images/products/god-of-fire.jpg" },
+                { name: "Portrait of a lady", price: null, image: "images/products/portrait-lady.jpg" },
+                { name: "Sauvage Dior", price: null, image: "images/products/sauvage-dior.jpg" },
+                { name: "Sauvage Dior elixir", price: null, image: "images/products/sauvage-elixir.jpg" },
+                { name: "Eden juicy", price: null, image: "images/products/eden-juicy.jpg" },
+                { name: "Club the nuit intense man (inquiry)", price: null, image: "images/products/club-nuit-2.jpg" },
+                { name: "Paco rabanne invictus", price: null, image: "images/products/invictus.jpg" },
+                { name: "Khamrah", price: null, image: "images/products/khamrah.jpg" }
+            ]
+        }
     ]
 };
 
-// Load from GitHub
-async function loadCatalog() {
-    try {
-        // Add timestamp to bust cache
-        const url = `https://raw.githubusercontent.com/Orhume/MarjScent/main/catalog.json?t=${Date.now()}`;
-        
-        console.log("Fetching from GitHub...");
-        const response = await fetch(url);
-        
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const catalog = await response.json();
-        
-        PRODUCTS_DATA = {
-            currency: catalog.currency || "₦",
-            business: {
-                name: catalog.business?.name || FALLBACK_DATA.business.name,
-                whatsapp: catalog.business?.whatsapp || FALLBACK_DATA.business.whatsapp,
-                email: catalog.business?.email || FALLBACK_DATA.business.email,
-                address: FALLBACK_DATA.business.address,
-                hours: FALLBACK_DATA.business.hours
-            },
-            products: catalog.products.map(p => ({
-                ...p,
-                image: p.image || `images/products/product${p.id}.jpg`,
-                variants: p.variants || ["10ml", "20ml", "50ml"]
-            }))
-        };
-        
-        console.log("✅ Loaded fresh data:", catalog.lastUpdated);
-        
-    } catch (error) {
-        console.warn("⚠️ GitHub failed, using fallback:", error.message);
-        PRODUCTS_DATA = FALLBACK_DATA;
-    }
-    
-    initializeApp();
-}
-function initializeApp() {
-    console.log("Starting...");
-    try {
-        renderProducts();
-        renderReviews();
-        updateCartUI();
-        setupEventListeners();
-        setupScrollEffects();
-        setupAnimations();
-        console.log("✅ Ready!");
-    } catch (error) {
-        console.error("❌ Error:", error);
-    }
-}
+// ========================================
+// INITIALIZATION
+// ========================================
 
-// START
-document.addEventListener('DOMContentLoaded', loadCatalog);
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Marj Scents loaded");
+    renderProducts();
+    updateCartUI();
+    setupEventListeners();
+    setupScrollEffects();
+    setupAnimations();
+});
 
 // ========================================
-// KEEP ALL FUNCTIONS BELOW (unchanged)
+// PRODUCT RENDERING - CATEGORY CARDS WITH IMAGES
 // ========================================
+
 function renderProducts() {
     const grid = document.getElementById('productsGrid');
+    if (!grid) return;
+
+    const html = PRODUCTS_DATA.categories.map(category => renderCategoryCard(category)).join('');
+    grid.innerHTML = html;
+}
+
+function renderCategoryCard(category) {
+    const pricedProducts = category.products.filter(p => p.price !== null || p.variants);
+    const totalProducts = category.products.length;
+    const minPrice = getMinPrice(category);
+    const maxPrice = getMaxPrice(category);
     
-    if (!grid) {
-        console.error("ERROR: productsGrid element not found in HTML!");
-        return;
-    }
-    
-    if (!PRODUCTS_DATA || !PRODUCTS_DATA.products || PRODUCTS_DATA.products.length === 0) {
-        console.error("ERROR: No products data available");
-        grid.innerHTML = '<p style="text-align:center;padding:2rem;">No products available.</p>';
-        return;
-    }
-    
-    const products = PRODUCTS_DATA.products;
-    console.log("Rendering", products.length, "products...");
-    
-    grid.innerHTML = products.map(product => {
-        // Handle image - use product.image or fallback to numbered images
-        let imageHtml;
-        if (product.image) {
-            // Add error handler to fallback to emoji if image fails to load
-            imageHtml = `<img src="${product.image}" alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<span style=\\'font-size: 4rem;\\'>${getProductEmoji(product.category)}</span>';">`;
-        } else {
-            imageHtml = `<span style="font-size: 4rem;">${getProductEmoji(product.category)}</span>`;
-        }
-        
-        const badgeHtml = product.badge ? `<span class="product-badge">${product.badge}</span>` : '';
-        const originalPriceHtml = product.originalPrice ? `<span class="original">₦${product.originalPrice.toLocaleString()}</span>` : '';
-        
-        return `
-            <div class="product-card fade-in" onclick="showProductDetails(${product.id})">
-                <div class="product-image">
-                    ${badgeHtml}
-                    ${imageHtml}
+    // Preview first 5 products
+    const previewProducts = category.products.slice(0, 5);
+
+    return `
+        <div class="product-card fade-in category-card" data-category="${category.id}">
+            <div class="product-image">
+                ${category.badge ? `<span class="product-badge">${category.badge}</span>` : ''}
+                <span class="stock-badge in">${pricedProducts.length}/${totalProducts} Available</span>
+                <img src="${category.image}" alt="${category.name}" class="category-image" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span class=\\'category-fallback\\'>${category.name.charAt(0)}</span>';">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${category.name}</h3>
+                <p class="product-description">${category.description}</p>
+                
+                <div class="product-preview">
+                    ${previewProducts.map(p => `
+                        <span class="preview-tag ${p.price === null && !p.variants ? 'inquiry' : ''}">
+                            ${p.name}
+                        </span>
+                    `).join('')}
+                    ${category.products.length > 5 ? `<span class="preview-tag more">+${category.products.length - 5}</span>` : ''}
                 </div>
-                <div class="product-info">
-                    <p class="product-category">${product.category}</p>
-                    <h3 class="product-name">${product.name}</h3>
-                    <p class="product-description">${product.description}</p>
-                    <div class="product-footer">
-                        <div class="product-price">
-                            <span class="currency">₦</span>${product.price.toLocaleString()}
-                            ${originalPriceHtml}
-                        </div>
-                        <button class="add-to-cart" onclick="event.stopPropagation(); addToCart(${product.id})">
-                            <i class="fas fa-plus"></i>
-                        </button>
+                
+                <div class="product-footer">
+                    <div class="product-price">
+                        <span class="currency">₦</span>${minPrice} — ₦${maxPrice}
                     </div>
+                    <button class="add-to-cart select-btn" onclick="openProductSelector('${category.id}')">
+                        <span>Select</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
-            </div>
-        `;
-    }).join('');
-    
-    console.log("Products rendered successfully!");
-}
-
-function getProductEmoji(category) {
-    const emojis = {
-        "Signature Collection": "🧴",
-        "Luxury Line": "🎁",
-        "Home Fragrance": "🌸",
-        "Ambiance": "🕯️",
-        "Daily Wear": "💨",
-        "Accessories": "✨",
-        "Home & Car": "🏠",
-        "Premium Oils": "💎"
-    };
-    return emojis[category] || "🧴";
-}
-
-// ========================================
-// REVIEWS RENDERING (FIXED - only one definition)
-// ========================================
-
-function renderReviews() {
-    // Check if we're using the old reviews section or new one
-    const grid = document.getElementById('reviewsGrid');
-    
-    // If reviewsGrid doesn't exist, the HTML uses static reviews (new version)
-    if (!grid) {
-        console.log("reviewsGrid not found - using static HTML reviews");
-        return;
-    }
-    
-    // Old dynamic reviews rendering (if needed)
-    if (typeof REVIEWS_DATA === 'undefined') {
-        console.error("REVIEWS_DATA not loaded");
-        return;
-    }
-    
-    grid.innerHTML = REVIEWS_DATA.map(review => `
-        <div class="review-card fade-in" onclick="openReviewModal(${review.id})">
-            <div class="review-image-container">
-                <img src="${review.image}" alt="Review from ${review.customer}" class="review-image">
-                <div class="review-overlay">
-                    <i class="fas fa-search-plus"></i>
-                    <span>Click to view</span>
-                </div>
-            </div>
-            <div class="review-info">
-                <div class="review-header">
-                    <span class="reviewer-name">${review.customer}</span>
-                    <span class="verified-badge"><i class="fas fa-check-circle"></i> Verified</span>
-                </div>
-                <p class="review-product">${review.product}</p>
-                <p class="review-caption">"${review.caption}"</p>
-            </div>
-        </div>
-    `).join('');
-}
-
-function openReviewModal(reviewId) {
-    if (typeof REVIEWS_DATA === 'undefined') return;
-    
-    const review = REVIEWS_DATA.find(r => r.id === reviewId);
-    if (!review) return;
-    
-    const modal = document.createElement('div');
-    modal.className = 'review-modal';
-    modal.innerHTML = `
-        <div class="review-modal-overlay" onclick="closeReviewModal()"></div>
-        <div class="review-modal-content">
-            <button class="review-modal-close" onclick="closeReviewModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <img src="${review.image}" alt="Review from ${review.customer}" class="review-modal-image">
-            <div class="review-modal-info">
-                <h3>${review.customer}</h3>
-                <p class="review-modal-product">${review.product}</p>
-                <p class="review-modal-caption">"${review.caption}"</p>
-                <span class="verified-badge large"><i class="fas fa-check-circle"></i> Verified Purchase</span>
             </div>
         </div>
     `;
-    
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => modal.classList.add('active'), 10);
 }
 
-function closeReviewModal() {
-    const modal = document.querySelector('.review-modal');
-    if (modal) {
-        modal.classList.remove('active');
-        setTimeout(() => {
-            modal.remove();
-            document.body.style.overflow = '';
-        }, 300);
+// ========================================
+// PRODUCT SELECTOR MODAL WITH IMAGES
+// ========================================
+
+function openProductSelector(categoryId) {
+    const category = PRODUCTS_DATA.categories.find(c => c.id === categoryId);
+    
+    currentCategory = category;
+    currentProduct = null;
+    currentVariant = null;
+
+    const modal = document.createElement('div');
+    modal.id = 'productSelectorModal';
+    modal.className = 'modal-overlay active';
+    
+    modal.innerHTML = `
+        <div class="selector-modal">
+            <button class="close-modal" onclick="closeProductSelector()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="selector-header">
+                <div class="selector-image">
+                    <img src="${category.image}" alt="${category.name}" onerror="this.style.display='none'; this.parentElement.innerHTML = '<div class=\\'selector-fallback\\'>${category.name.charAt(0)}</div>';">
+                </div>
+                <h2>${category.name}</h2>
+                <p>${category.description}</p>
+            </div>
+
+            <div class="selector-content">
+                <div class="product-dropdown-section">
+                    <label>Select Product:</label>
+                    <select id="productSelect" class="product-select" onchange="onProductSelect(this.value)">
+                        <option value="">-- Choose ${category.name} --</option>
+                        ${category.products.map(product => {
+                            const hasPrice = product.price !== null || product.variants;
+                            const priceText = product.variants 
+                                ? '(₦' + Math.min(...product.variants.map(v => v.price)).toLocaleString() + '+)'
+                                : product.price 
+                                    ? '(₦' + product.price.toLocaleString() + ')'
+                                    : '(Inquiry)';
+                            return `
+                                <option value="${product.name}" data-has-price="${hasPrice}" data-image="${product.image || ''}">
+                                    ${product.name} ${hasPrice ? priceText : '(Price on request)'}
+                                </option>
+                            `;
+                        }).join('')}
+                    </select>
+                </div>
+
+                <div id="productImageSection" class="product-image-section hidden">
+                    <img id="selectedProductImage" src="" alt="Product" onerror="this.style.display='none';">
+                </div>
+
+                <div id="variantSection" class="variant-section hidden">
+                    <label>Select Size/Variant:</label>
+                    <div id="variantOptions" class="variant-options"></div>
+                </div>
+
+                <div id="productSummary" class="product-summary hidden">
+                    <div class="summary-card">
+                        <div class="summary-row">
+                            <span>Category:</span>
+                            <strong>${category.name}</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Product:</span>
+                            <strong id="summaryProductName"></strong>
+                        </div>
+                        <div class="summary-row" id="variantRow">
+                            <span>Variant:</span>
+                            <strong id="summaryVariant"></strong>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row total">
+                            <span>Price:</span>
+                            <strong class="price" id="summaryPrice"></strong>
+                        </div>
+                    </div>
+                    <button class="add-to-cart-btn" onclick="addSelectedToCart()">
+                        <i class="fas fa-shopping-bag"></i>
+                        Add to Cart
+                    </button>
+                </div>
+
+                <div id="inquirySection" class="inquiry-section hidden">
+                    <div class="inquiry-card">
+                        <i class="fab fa-whatsapp"></i>
+                        <h4>Price on Request</h4>
+                        <p>This item is available by inquiry. Contact us on WhatsApp for pricing.</p>
+                        <a href="https://wa.me/${PRODUCTS_DATA.business.whatsapp}?text=Hello! I'm interested in ${currentProduct ? currentProduct.name : 'a product'} from ${category.name}. Please send me the price." 
+                           class="whatsapp-inquiry-btn" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            Inquire on WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+}
+
+function onProductSelect(productName) {
+    const product = currentCategory.products.find(p => p.name === productName);
+    
+    currentProduct = product;
+    currentVariant = null;
+
+    const productImageSection = document.getElementById('productImageSection');
+    const selectedProductImage = document.getElementById('selectedProductImage');
+    const variantSection = document.getElementById('variantSection');
+    const productSummary = document.getElementById('productSummary');
+    const inquirySection = document.getElementById('inquirySection');
+    const variantRow = document.getElementById('variantRow');
+
+    // Show product image if available
+    if (product && product.image) {
+        selectedProductImage.src = product.image;
+        selectedProductImage.style.display = 'block';
+        productImageSection.classList.remove('hidden');
+    } else {
+        productImageSection.classList.add('hidden');
     }
+
+    if (!product) {
+        variantSection.classList.add('hidden');
+        productSummary.classList.add('hidden');
+        inquirySection.classList.add('hidden');
+        return;
+    }
+
+    // Check if product has variants (like perfume oils with sizes)
+    if (product.variants && product.variants.length > 0) {
+        inquirySection.classList.add('hidden');
+        variantSection.classList.remove('hidden');
+        
+        const variantOptions = document.getElementById('variantOptions');
+        variantOptions.innerHTML = product.variants.map((variant, index) => `
+            <div class="variant-card" onclick="selectVariant(${index})">
+                <span class="variant-size">${variant.size}</span>
+                <span class="variant-price">₦${variant.price.toLocaleString()}</span>
+            </div>
+        `).join('');
+        
+        // Hide summary until variant selected
+        productSummary.classList.add('hidden');
+        
+    } else if (product.price !== null) {
+        // Simple product with single price
+        variantSection.classList.add('hidden');
+        inquirySection.classList.add('hidden');
+        productSummary.classList.remove('hidden');
+        variantRow.style.display = 'none';
+        
+        document.getElementById('summaryProductName').textContent = product.name;
+        document.getElementById('summaryPrice').textContent = '₦' + product.price.toLocaleString();
+        
+    } else {
+        // Price on request
+        variantSection.classList.add('hidden');
+        productSummary.classList.add('hidden');
+        inquirySection.classList.remove('hidden');
+        
+        // Update inquiry message
+        const inquiryBtn = inquirySection.querySelector('.whatsapp-inquiry-btn');
+        inquiryBtn.href = `https://wa.me/${PRODUCTS_DATA.business.whatsapp}?text=Hello! I'm interested in ${product.name} from ${currentCategory.name}. Please send me the price.`;
+    }
+}
+
+function selectVariant(variantIndex) {
+    const variant = currentProduct.variants[variantIndex];
+    currentVariant = variant;
+
+    // Update UI
+    const cards = document.querySelectorAll('.variant-card');
+    cards.forEach((card, index) => {
+        card.classList.toggle('selected', index === variantIndex);
+    });
+
+    // Show summary
+    const productSummary = document.getElementById('productSummary');
+    const variantRow = document.getElementById('variantRow');
+    
+    productSummary.classList.remove('hidden');
+    variantRow.style.display = 'flex';
+    
+    document.getElementById('summaryProductName').textContent = currentProduct.name;
+    document.getElementById('summaryVariant').textContent = variant.size;
+    document.getElementById('summaryPrice').textContent = '₦' + variant.price.toLocaleString();
+}
+
+function addSelectedToCart() {
+    if (!currentProduct) return;
+    
+    let cartItem;
+    
+    if (currentVariant) {
+        // Product with variant (e.g., perfume oil with size)
+        cartItem = {
+            id: `${currentCategory.id}-${currentProduct.name}-${currentVariant.size}`,
+            name: `${currentProduct.name}`,
+            category: currentCategory.name,
+            variant: currentVariant.size,
+            price: currentVariant.price,
+            quantity: 1,
+            image: currentProduct.image || currentCategory.image
+        };
+    } else {
+        // Simple product
+        cartItem = {
+            id: `${currentCategory.id}-${currentProduct.name}`,
+            name: currentProduct.name,
+            category: currentCategory.name,
+            variant: 'Standard',
+            price: currentProduct.price,
+            quantity: 1,
+            image: currentProduct.image || currentCategory.image
+        };
+    }
+
+    addItemToCart(cartItem);
+    closeProductSelector();
+}
+
+function closeProductSelector() {
+    const modal = document.getElementById('productSelectorModal');
+    if (modal) {
+        modal.remove();
+        document.body.style.overflow = '';
+    }
+    currentCategory = null;
+    currentProduct = null;
+    currentVariant = null;
+}
+
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
+
+function getMinPrice(category) {
+    let min = Infinity;
+    
+    category.products.forEach(product => {
+        if (product.price !== null && product.price < min) {
+            min = product.price;
+        }
+        if (product.variants) {
+            product.variants.forEach(v => {
+                if (v.price < min) min = v.price;
+            });
+        }
+    });
+    
+    return min === Infinity ? 0 : min.toLocaleString();
+}
+
+function getMaxPrice(category) {
+    let max = 0;
+    
+    category.products.forEach(product => {
+        if (product.price !== null && product.price > max) {
+            max = product.price;
+        }
+        if (product.variants) {
+            product.variants.forEach(v => {
+                if (v.price > max) max = v.price;
+            });
+        }
+    });
+    
+    return max.toLocaleString();
 }
 
 // ========================================
 // CART FUNCTIONS
 // ========================================
 
-function addToCart(productId) {
-    if (typeof PRODUCTS_DATA === 'undefined') return;
-    
-    const product = PRODUCTS_DATA.products.find(p => p.id === productId);
-    if (!product || !product.inStock) return;
-    
-    const existingItem = cart.find(item => item.id === productId);
-    
-    if (existingItem) {
-        existingItem.quantity++;
+function addItemToCart(item) {
+    const existing = cart.find(c => c.id === item.id);
+
+    if (existing) {
+        existing.quantity++;
     } else {
-        cart.push({
-            id: product.id,
-            name: product.name,
-            price: product.price,
-            image: product.image,
-            category: product.category,
-            quantity: 1,
-            selectedVariant: product.variants ? product.variants[0] : 'Default'
-        });
+        cart.push(item);
     }
-    
+
     updateCartUI();
     toggleCart();
-    showNotification(`${product.name} added to cart`);
+    showNotification(`${item.name} added to cart`);
 }
 
 function removeFromCart(index) {
@@ -312,17 +508,14 @@ function updateCartUI() {
     const cartItems = document.getElementById('cartItems');
     const cartFooter = document.getElementById('cartFooter');
     const cartTotal = document.getElementById('cartTotal');
-    
-    if (!cartCount || !cartItems) {
-        console.error("Cart elements not found");
-        return;
-    }
-    
+
+    if (!cartCount || !cartItems) return;
+
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
+
     cartCount.textContent = totalItems;
-    
+
     if (cart.length === 0) {
         cartItems.innerHTML = `
             <div class="empty-cart">
@@ -335,10 +528,12 @@ function updateCartUI() {
     } else {
         cartItems.innerHTML = cart.map((item, index) => `
             <div class="cart-item">
-                <div class="cart-item-image">${getProductEmoji(item.category)}</div>
+                <div class="cart-item-image">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.textContent='${item.name.charAt(0)}'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.background='var(--color-stone)'; this.style.fontSize='1.5rem'; this.style.color='var(--color-charcoal)';">
+                </div>
                 <div class="cart-item-details">
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-variant">${item.selectedVariant}</div>
+                    <div class="cart-item-variant">${item.variant}</div>
                     <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
                     <div class="cart-item-actions">
                         <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
@@ -359,23 +554,16 @@ function updateCartUI() {
 function toggleCart() {
     const overlay = document.getElementById('cartOverlay');
     const drawer = document.getElementById('cartDrawer');
-    
-    if (!overlay || !drawer) {
-        console.error("Cart elements not found");
-        return;
-    }
-    
+
+    if (!overlay || !drawer) return;
+
     overlay.classList.toggle('active');
     drawer.classList.toggle('active');
     document.body.style.overflow = drawer.classList.contains('active') ? 'hidden' : '';
 }
 
 // ========================================
-// WHATSAPP CHECKOUT
-// ========================================
-
-// ========================================
-// CHECKOUT FUNCTIONS (NEW)
+// CHECKOUT FUNCTIONS
 // ========================================
 
 function openCheckout() {
@@ -383,27 +571,24 @@ function openCheckout() {
         showNotification("Your cart is empty!");
         return;
     }
-    
+
     const modal = document.getElementById('checkoutModal');
     const itemsContainer = document.getElementById('checkoutItems');
     const totalElement = document.getElementById('checkoutTotal');
-    
-    // Populate order summary
+
     itemsContainer.innerHTML = cart.map(item => `
         <div class="checkout-item">
-            <span>${item.name} (${item.selectedVariant}) x${item.quantity}</span>
+            <span>${item.name} (${item.variant}) x${item.quantity}</span>
             <span>₦${(item.price * item.quantity).toLocaleString()}</span>
         </div>
     `).join('');
-    
+
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     totalElement.textContent = '₦' + subtotal.toLocaleString();
-    
-    // Show modal
+
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    // Close cart drawer if open
+
     const cartDrawer = document.getElementById('cartDrawer');
     const cartOverlay = document.getElementById('cartOverlay');
     if (cartDrawer && cartDrawer.classList.contains('active')) {
@@ -420,137 +605,47 @@ function closeCheckout() {
 
 function submitOrder(event) {
     event.preventDefault();
-    
-    // Get form values
+
     const name = document.getElementById('customerName').value.trim();
     const phone = document.getElementById('customerPhone').value.trim();
     const email = document.getElementById('customerEmail').value.trim();
     const address = document.getElementById('deliveryAddress').value.trim();
-    
-    // Validate
+
     if (!name || !phone || !address) {
         showNotification("Please fill in all required fields!");
         return;
     }
-    
-    // Build WhatsApp message
+
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const business = PRODUCTS_DATA.business;
-    
-    let message = `*New Order from ${business.name} Website*%0A%0A`;
+
+    let message = `*New Order from Marj Scents Website*%0A%0A`;
     message += `*Customer Details:*%0A`;
     message += `Name: ${name}%0A`;
     message += `Phone: ${phone}%0A`;
     if (email) message += `Email: ${email}%0A`;
     message += `Address: ${address}%0A%0A`;
     message += `*Order Items:*%0A`;
-    
+
     cart.forEach((item, index) => {
-        message += `${index + 1}. ${item.name} (${item.selectedVariant}) x${item.quantity} - ₦${(item.price * item.quantity).toLocaleString()}%0A`;
+        message += `${index + 1}. ${item.name} (${item.variant}) x${item.quantity} - ₦${(item.price * item.quantity).toLocaleString()}%0A`;
     });
-    
+
     message += `%0A*Subtotal: ₦${subtotal.toLocaleString()}*%0A`;
     message += `*Delivery: To be confirmed*%0A`;
     message += `*Total: ₦${subtotal.toLocaleString()} + Delivery*%0A%0A`;
     message += `Please confirm availability and send payment details.`;
-    
-    // Open WhatsApp
-    const whatsappURL = `https://wa.me/${business.whatsapp}?text=${message}`;
-    window.open(whatsappURL, '_blank');
-    
-    // Clear cart and close modal
+
+    window.open(`https://wa.me/${PRODUCTS_DATA.business.whatsapp}?text=${message}`, '_blank');
+
     cart = [];
     updateCartUI();
     closeCheckout();
     showNotification("Order sent! Check your WhatsApp.");
-    
-    // Reset form
     document.getElementById('checkoutForm').reset();
 }
 
 // ========================================
-// UPDATED CART FUNCTIONS
-// ========================================
-
-function updateCartUI() {
-    const cartCount = document.getElementById('cartCount');
-    const cartItems = document.getElementById('cartItems');
-    const cartFooter = document.getElementById('cartFooter');
-    const cartTotal = document.getElementById('cartTotal');
-    
-    if (!cartCount || !cartItems) {
-        console.error("Cart elements not found");
-        return;
-    }
-    
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    cartCount.textContent = totalItems;
-    
-    if (cart.length === 0) {
-        cartItems.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-bag"></i>
-                <p>Your experience is waiting</p>
-                <p style="font-size: 0.9rem; margin-top: 0.5rem;">Add items to begin your fragrance journey</p>
-            </div>
-        `;
-        if (cartFooter) cartFooter.style.display = 'none';
-    } else {
-        cartItems.innerHTML = cart.map((item, index) => `
-            <div class="cart-item">
-                <div class="cart-item-image">${getProductEmoji(item.category)}</div>
-                <div class="cart-item-details">
-                    <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-variant">${item.selectedVariant}</div>
-                    <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
-                    <div class="cart-item-actions">
-                        <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
-                        <span class="remove-item" onclick="removeFromCart(${index})">Remove</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        if (cartFooter) {
-            cartFooter.style.display = 'block';
-            cartTotal.textContent = '₦' + subtotal.toLocaleString();
-        }
-    }
-}
-
-// ========================================
-// UPDATED EVENT LISTENERS
-// ========================================
-
-function setupEventListeners() {
-    // Close modals on escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeScentFinder();
-            closeCheckout(); // Add this
-            const cartDrawer = document.getElementById('cartDrawer');
-            if (cartDrawer && cartDrawer.classList.contains('active')) {
-                toggleCart();
-            }
-            closeReviewModal();
-        }
-    });
-    
-    // Close checkout when clicking overlay
-    const checkoutModal = document.getElementById('checkoutModal');
-    if (checkoutModal) {
-        checkoutModal.addEventListener('click', (e) => {
-            if (e.target === checkoutModal) {
-                closeCheckout();
-            }
-        });
-    }
-}
-// ========================================
-// SCENT FINDER QUIZ
+// SCENT FINDER & UTILITIES
 // ========================================
 
 function openScentFinder() {
@@ -558,7 +653,6 @@ function openScentFinder() {
     if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        resetFinder();
     }
 }
 
@@ -570,214 +664,61 @@ function closeScentFinder() {
     }
 }
 
-function selectOption(category, value) {
-    finderSelections[category] = value;
-    
-    // Visual feedback
-    if (event && event.currentTarget) {
-        const options = event.currentTarget.parentElement.querySelectorAll('.finder-option');
-        options.forEach(opt => opt.classList.remove('selected'));
-        event.currentTarget.classList.add('selected');
-    }
-    
-    // Enable next button
-    const step1Btn = document.getElementById('step1Btn');
-    const step2Btn = document.getElementById('step2Btn');
-    
-    if (category === 'mood' && step1Btn) {
-        step1Btn.disabled = false;
-    } else if (category === 'occasion' && step2Btn) {
-        step2Btn.disabled = false;
-    }
-}
-
-function nextStep() {
-    const step1 = document.getElementById('finderStep1');
-    const step2 = document.getElementById('finderStep2');
-    if (step1) step1.style.display = 'none';
-    if (step2) step2.style.display = 'block';
-}
-
-function prevStep() {
-    const step1 = document.getElementById('finderStep1');
-    const step2 = document.getElementById('finderStep2');
-    if (step2) step2.style.display = 'none';
-    if (step1) step1.style.display = 'block';
-}
-
-function showResults() {
-    if (typeof PRODUCTS_DATA === 'undefined') return;
-    
-    const recommendations = {
-        'romantic': ['Premium Perfume Oils', 'Black Opium (Inspired)', 'Baccarat Rouge (Inspired)'],
-        'fresh': ['Body Spray & Mist', 'Room Sprays', 'Air Fresheners'],
-        'bold': ['Black Opium (Inspired)', 'Premium Perfume Oils', 'Oud Maracuja'],
-        'calm': ['Reed Diffusers', 'Scented Candles', 'Hibiscus Maharaja'],
-        'day': ['Body Spray & Mist', 'Atomisers & Travel Sets', 'Air Fresheners'],
-        'night': ['Premium Perfume Oils', 'Black Opium (Inspired)', 'Baccarat Rouge (Inspired)'],
-        'daily': ['Premium Perfume Oils', 'Body Spray & Mist', 'Hibiscus Maharaja'],
-        'gifting': ['Designer Boxed Perfumes', 'Reed Diffusers', 'Scented Candles']
-    };
-    
-    const moodRecs = recommendations[finderSelections.mood] || [];
-    const occasionRecs = recommendations[finderSelections.occasion] || [];
-    const allRecs = [...new Set([...moodRecs, ...occasionRecs])];
-    
-    const recProducts = PRODUCTS_DATA.products.filter(p => allRecs.includes(p.name)).slice(0, 2);
-    
-    const step2 = document.getElementById('finderStep2');
-    const results = document.getElementById('finderResults');
-    
-    if (step2) step2.style.display = 'none';
-    if (results) results.style.display = 'block';
-    
-    const contentDiv = document.getElementById('recommendationContent');
-    if (!contentDiv) return;
-    
-    if (recProducts.length > 0) {
-        contentDiv.innerHTML = `
-            <p style="margin-bottom: 2rem; color: #666;">Based on your preferences for a <strong>${finderSelections.mood}</strong> scent for <strong>${finderSelections.occasion}</strong>:</p>
-            <div style="display: grid; gap: 1rem;">
-                ${recProducts.map(p => `
-                    <div style="display: flex; gap: 1rem; padding: 1rem; background: white; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: all 0.3s ease;" 
-                         onmouseover="this.style.borderColor='var(--color-gold)'" 
-                         onmouseout="this.style.borderColor='transparent'"
-                         onclick="addToCart(${p.id}); closeScentFinder();">
-                        <div style="font-size: 3rem;">${getProductEmoji(p.category)}</div>
-                        <div style="text-align: left;">
-                            <h4 style="font-family: var(--font-serif); margin-bottom: 0.3rem;">${p.name}</h4>
-                            <p style="font-size: 0.9rem; color: #666;">${p.description}</p>
-                            <p style="color: var(--color-gold); font-weight: 600; margin-top: 0.5rem;">₦${p.price.toLocaleString()}</p>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #666;">Click any product to add to cart!</p>
-        `;
-    } else {
-        contentDiv.innerHTML = `
-            <p style="color: #666;">We recommend browsing our full collection to find your perfect match!</p>
-            <button class="finder-btn" onclick="closeScentFinder(); document.getElementById('products').scrollIntoView({behavior: 'smooth'})" style="margin-top: 1rem;">
-                View All Products
-            </button>
-        `;
-    }
-}
-
-function resetFinder() {
-    finderSelections = {};
-    document.querySelectorAll('.finder-option').forEach(opt => opt.classList.remove('selected'));
-    
-    const step1Btn = document.getElementById('step1Btn');
-    const step2Btn = document.getElementById('step2Btn');
-    const step1 = document.getElementById('finderStep1');
-    const step2 = document.getElementById('finderStep2');
-    const results = document.getElementById('finderResults');
-    
-    if (step1Btn) step1Btn.disabled = true;
-    if (step2Btn) step2Btn.disabled = true;
-    if (step1) step1.style.display = 'block';
-    if (step2) step2.style.display = 'none';
-    if (results) results.style.display = 'none';
-}
-
-// ========================================
-// UTILITY FUNCTIONS
-// ========================================
-
-function showProductDetails(productId) {
-    if (typeof PRODUCTS_DATA === 'undefined') return;
-    
-    const product = PRODUCTS_DATA.products.find(p => p.id === productId);
-    if (!product) return;
-    
-    const message = `${product.name}\n${product.description}\nPrice: ₦${product.price.toLocaleString()}\nSizes: ${product.variants ? product.variants.join(', ') : 'N/A'}\n\nClick OK to add to cart!`;
-    
-    if (confirm(message)) {
-        addToCart(productId);
-    }
-}
-
 function showNotification(message) {
     const notif = document.createElement('div');
-    notif.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: var(--color-charcoal);
-        color: white;
-        padding: 1rem 2rem;
-        border-radius: 4px;
-        z-index: 9999;
-        font-family: var(--font-sans);
-        font-size: 0.9rem;
-        animation: slideIn 0.3s ease;
-    `;
+    notif.className = 'notification';
     notif.textContent = message;
     document.body.appendChild(notif);
-    
+
+    setTimeout(() => notif.classList.add('show'), 10);
     setTimeout(() => {
-        notif.style.animation = 'slideOut 0.3s ease';
+        notif.classList.remove('show');
         setTimeout(() => notif.remove(), 300);
     }, 3000);
 }
 
 function setupEventListeners() {
-    // Close modals on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeScentFinder();
+            closeCheckout();
+            closeProductSelector();
             const cartDrawer = document.getElementById('cartDrawer');
-            if (cartDrawer && cartDrawer.classList.contains('active')) {
-                toggleCart();
-            }
-            closeReviewModal();
+            if (cartDrawer && cartDrawer.classList.contains('active')) toggleCart();
         }
     });
+
+    const checkoutModal = document.getElementById('checkoutModal');
+    if (checkoutModal) {
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target === checkoutModal) closeCheckout();
+        });
+    }
 }
 
 function setupScrollEffects() {
     const navbar = document.getElementById('navbar');
     if (!navbar) return;
-    
+
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+        if (window.scrollY > 50) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
     });
 }
 
 function setupAnimations() {
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('visible');
         });
     }, { threshold: 0.1 });
-    
+
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 }
 
 function toggleMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
     if (navLinks) {
-        navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        navLinks.classList.toggle('active');
     }
 }
-
-// Add CSS animations dynamically
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
