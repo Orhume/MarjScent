@@ -83,7 +83,7 @@ const PRODUCTS_DATA = {
         {
             id: "perfume-oils",
             name: "Perfume Oils",
-            description: "Long-lasting, alcohol-free concentrated fragrance oils",
+            description: "Long-lasting, alcohol-free undiluted 100 percent perfume oils",
             badge: "Bestseller",
             image: "images/categories/perfume-oils.jpg",
             products: [
