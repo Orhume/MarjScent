@@ -57,8 +57,8 @@ const PRODUCTS_DATA = {
         },
         {
             id: "designer-perfumes",
-            name: "Designer Perfumes",
-            description: "Authentic designer fragrances",
+            name: "Niche/Arabian Perfumes",
+            description: "Authentic niche and arabian fragrances",
             badge: "Luxury",
             image: "images/categories/designer-perfumes.jpg",
             products: [
